@@ -1,0 +1,81 @@
+<div class="row">
+    <div class="col-md-5">
+        <img src="{{ url_for('static', filename=card.image_path) }}" class="img-fluid rounded" alt="{{ card.name }}">
+    </div>
+    <div class="col-md-7">
+        <h2 class="d-none">{{ card.name }}</h2> <!-- Versteckter Titel für JS -->
+        <div class="d-flex justify-content-between align-items-start">
+            <h4 class="mb-0">{{ card.name }}</h4>
+            {% if card.hp %}
+                <span class="badge bg-danger fs-6">KP {{ card.hp }}</span>
+            {% endif %}
+        </div>
+        <small class="text-muted">{{ card.set.name }} - {{ card.number }}</small>
+        <hr>
+        
+        {% if card.types %}
+            <p><strong>Typen:</strong> 
+                {% for type in card.types %}
+                    <span class="badge bg-secondary">{{ type.name }}</span>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        <!-- Fähigkeiten -->
+        {% if card.abilities %}
+            {% for ability in card.abilities %}
+                <div class="mb-2">
+                    <p class="mb-0"><strong>{{ ability.type }} Fähigkeit: {{ ability.name }}</strong></p>
+                    <p class="small">{{ ability.text }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Attacken -->
+        {% if card.attacks %}
+            {% for attack in card.attacks %}
+                <div class="attack-box border-top pt-2 mt-2">
+                    <div class="d-flex justify-content-between">
+                        <strong>{{ attack.name }}</strong>
+                        <span><strong>{{ attack.damage }}</strong></span>
+                    </div>
+                    <p class="small mb-0">{{ attack.text }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Schwäche, Resistenz, Rückzug -->
+        <div class="d-flex justify-content-around text-center mt-3 pt-2 border-top">
+            {% if card.weaknesses %}
+                <div><small>Schwäche</small><br>{{ card.weaknesses[0].type.name }} {{ card.weaknesses[0].value }}</div>
+            {% endif %}
+            {% if card.resistances %}
+                <div><small>Resistenz</small><br>{{ card.resistances[0].type.name }} {{ card.resistances[0].value }}</div>
+            {% endif %}
+            {% if card.retreat_cost %}
+                <div><small>Rückzug</small><br>{{ card.retreat_cost|length }} Energie</div>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        {% if card.artist %}
+            <p class="small text-muted mb-2">Künstler: {{ card.artist }} | Seltenheit: {{ card.rarity.name }}</p>
+        {% endif %}
+
+        <!-- Buttons -->
+        <div class="mt-3 d-grid">
+            {% if current_user.is_authenticated %}
+                {% if in_collection %}
+                    <form action="{{ url_for('main.remove_from_collection', card_id=card.id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger">Aus Sammlung entfernen</button>
+                    </form>
+                {% else %}
+                    <form action="{{ url_for('main.add_to_collection', card_id=card.id) }}" method="POST">
+                        <button type="submit" class="btn btn-success">Zur Sammlung hinzufügen</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>

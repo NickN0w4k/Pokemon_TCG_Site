@@ -1,0 +1,101 @@
+/* custom.css */
+
+/* 1. Grundlegende Stile und subtile Animationen */
+:root {
+    --glow-color: rgba(255, 255, 255, 0.7);
+}
+
+body {
+    /* Sanfter Fade-In-Effekt beim Laden der Seite */
+    animation: fadeInAnimation ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* 2. Navbar-Styling */
+.navbar {
+    background-color: rgba(21, 25, 29, 0.8) !important; /* Leicht transparent */
+    backdrop-filter: blur(10px);
+    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.navbar-brand {
+    font-weight: 500;
+}
+
+/* Hover-Effekt für Navigationslinks */
+.nav-link {
+    position: relative;
+    transition: color 0.3s;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--glow-color);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+.nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+/* 3. Karten-Styling und Hover-Effekt */
+.card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    /* Der gewünschte "Glow"-Effekt */
+    box-shadow: 0 0 15px var(--glow-color);
+    border-color: var(--glow-color);
+}
+
+/* 4. Icon-Button Styling */
+.collection-button-container .btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.collection-button-container .btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px var(--bs-btn-bg);
+}
+
+/* 5. Modal-Styling */
+.modal-content {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+/* 6. Paginierungs-Styling */
+.page-link {
+    background-color: var(--bs-body-bg);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.page-link:hover {
+    background-color: var(--bs-secondary-bg);
+    color: var(--bs-primary);
+}
+.page-item.active .page-link {
+    box-shadow: 0 0 10px var(--bs-primary);
+}

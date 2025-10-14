@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}{{ card.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Linke Spalte: Kartenbild und Aktionen -->
+        <div class="col-md-5 col-lg-4 mb-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <img src="{{ url_for('static', filename=card.image_path) }}" class="card-img-top" alt="{{ card.name }}">
+                <div class="card-body">
+                    {% if current_user.is_authenticated %}
+                        {% if in_collection %}
+                            <form action="{{ url_for('main.remove_from_collection', card_id=card.id) }}" method="POST">
+                                <button type="submit" class="btn btn-danger w-100">Aus Sammlung entfernen</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('main.add_to_collection', card_id=card.id) }}" method="POST">
+                                <button type="submit" class="btn btn-success w-100">Zur Sammlung hinzufügen</button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <a href="{{ url_for('main.login') }}" class="btn btn-primary w-100">Anmelden zum Sammeln</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Rechte Spalte: Kartendetails -->
+        <div class="col-md-7 col-lg-8">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h1 class="mb-0">{{ card.name }}</h1>
+                {% if card.hp %}
+                    <span class="badge bg-danger fs-5">KP {{ card.hp }}</span>
+                {% endif %}
+            </div>
+            <p class="text-muted">
+                {{ card.supertype }}
+                {% if card.subtypes %}
+                    - {{ card.subtypes|map(attribute='name')|join(', ') }}
+                {% endif %}
+                {% if card.evolvesFrom %}
+                    <br>Entwickelt sich aus {{ card.evolvesFrom }}
+                {% endif %}
+            </p>
+            <hr>
+
+            <!-- Fähigkeiten -->
+            {% if card.abilities %}
+                {% for ability in card.abilities %}
+                <div class="mb-3">
+                    <h5><span class="badge bg-info me-2">{{ ability.type }}</span> {{ ability.name }}</h5>
+                    <p>{{ ability.text }}</p>
+                </div>
+                {% endfor %}
+                <hr>
+            {% endif %}
+
+            <!-- Attacken -->
+            {% if card.attacks %}
+                {% for attack in card.attacks %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <h5>{{ attack.name }}</h5>
+                        <h5 class="text-end">{{ attack.damage }}</h5>
+                    </div>
+                    <p class="mb-1">{{ attack.text }}</p>
+                    {% if attack.costs %}
+                        <small class="text-muted">Kosten: {{ attack.costs|map(attribute='cost_type')|join(', ') }}</small>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <hr>
+            {% endif %}
+
+            <!-- Regeltext (für Trainer etc.) -->
+            {% if card.rules %}
+                <div class="mb-3">
+                    <h5>Regel</h5>
+                    {% for rule in card.rules %}
+                        <p>{{ rule.rule_text }}</p>
+                    {% endfor %}
+                </div>
+                <hr>
+            {% endif %}
+
+            <!-- Schwächen, Resistenzen, Rückzugskosten -->
+            <div class="row mb-3">
+                {% if card.weaknesses %}
+                <div class="col">
+                    <strong>Schwäche:</strong>
+                    {% for w in card.weaknesses %} {{ w.type.name }} {{ w.value }} {% endfor %}
+                </div>
+                {% endif %}
+                {% if card.resistances %}
+                <div class="col">
+                    <strong>Resistenz:</strong>
+                    {% for r in card.resistances %} {{ r.type.name }} {{ r.value }} {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Meta-Infos -->
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-transparent px-0"><strong>Set:</strong> {{ card.set.name }}</li>
+                <li class="list-group-item bg-transparent px-0"><strong>Nummer:</strong> {{ card.number }}</li>
+                <li class="list-group-item bg-transparent px-0"><strong>Seltenheit:</strong> {{ card.rarity.name }}</li>
+                {% if card.artist %}
+                <li class="list-group-item bg-transparent px-0"><strong>Künstler:</strong> {{ card.artist }}</li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
