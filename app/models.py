@@ -1,10 +1,9 @@
 # app/models.py
+from . import db
 from flask_sqlalchemy import SQLAlchemy
 from flask import url_for
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
-db = SQLAlchemy()
 
 # --- Verbindungstabellen für N-zu-N Beziehungen ---
 
@@ -164,6 +163,12 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username
+        }
 
 # --- Sammlungstabelle ---
 class UserCollection(db.Model):
