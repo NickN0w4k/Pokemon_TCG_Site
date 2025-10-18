@@ -28,3 +28,5 @@ users.db
 # Environment variables - Können sensible Daten enthalten
 .env
 .flaskenv
+
+app/static/kartendaten
