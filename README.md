@@ -102,3 +102,4 @@ Das Datenbankschema für die Kartendatenbank ist in `DATABASE_SCHEMA.md` dokumen
 ├── requirements.txt      # Python-Abhängigkeiten
 └── run.py                # Startpunkt der Anwendung
 ```
+
